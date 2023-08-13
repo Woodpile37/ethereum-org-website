@@ -1,5 +1,5 @@
 // Libraries
-import React, { ReactNode } from "react"
+import React from "react"
 import {
   Box,
   Center,
@@ -8,9 +8,10 @@ import {
   Heading,
   HeadingProps,
   ListItem,
+  Show,
   Text,
   UnorderedList,
-  useTheme,
+  useToken,
 } from "@chakra-ui/react"
 import { graphql, PageProps } from "gatsby"
 import { GatsbyImage } from "gatsby-plugin-image"
@@ -26,8 +27,13 @@ import OriginalCard, {
 } from "../../components/Card"
 import PageHero from "../../components/PageHero"
 import PageMetadata from "../../components/PageMetadata"
-import StakingHomeTableOfContents from "../../components/Staking/StakingHomeTableOfContents"
 import Translation from "../../components/Translation"
+import UpgradeTableOfContents from "../../components/UpgradeTableOfContents"
+import {
+  ContentContainer,
+  InfoColumn,
+  InfoTitle,
+} from "../../templates/use-cases"
 
 // Utils
 import { Lang } from "../../utils/languages"
@@ -114,10 +120,10 @@ const H3 = ({ children, ...props }: HeadingProps) => {
 }
 
 const LearnPage = ({ data }: PageProps<Queries.LearnPageQuery, Context>) => {
-  const theme = useTheme()
   const { t } = useTranslation()
   const { language } = useI18next()
   const isRightToLeft = isLangRightToLeft(language as Lang)
+  const lgBp = useToken("breakpoints", "lg")
 
   const tocItems = [
     {
@@ -160,6 +166,11 @@ const LearnPage = ({ data }: PageProps<Queries.LearnPageQuery, Context>) => {
       {
         content: t("hero-button-lets-get-started"),
         toId: tocItems[0].id,
+        matomo: {
+          eventCategory: "learn hub hero buttons",
+          eventAction: "click",
+          eventName: "lets get started",
+        },
       },
     ],
   }
@@ -183,36 +194,16 @@ const LearnPage = ({ data }: PageProps<Queries.LearnPageQuery, Context>) => {
         pt={{ lg: 16 }}
         dir={isRightToLeft ? "rtl" : "ltr"}
       >
-        <Box
-          as="aside"
-          display={{ base: "none", lg: "flex" }}
-          flexDirection="column"
-          position="sticky"
-          top="6.25rem" // account for navbar
-          h="calc(100vh - 80px)"
-          flex="0 1 330px"
-          mx={8}
-        >
-          <Heading
-            lineHeight={1.4}
-            fontSize={{ base: "2.5rem", lg: "5xl" }}
-            fontWeight="bold"
-            textAlign={{ base: "left", lg: "right" }}
-            mt={0}
-            display={{ base: "none", lg: "block" }}
-          >
-            <Translation id="toc-learn-hub" />
-          </Heading>
-          <StakingHomeTableOfContents items={tocItems} />
-        </Box>
+        <Show above={lgBp}>
+          <InfoColumn>
+            <InfoTitle>
+              <Translation id="toc-learn-hub" />
+            </InfoTitle>
+            <UpgradeTableOfContents items={tocItems} />
+          </InfoColumn>
+        </Show>
 
-        <Box
-          as="article"
-          flex={`1 1 ${theme.breakpoints.l}`}
-          pb={8}
-          px={8}
-          id="content"
-        >
+        <ContentContainer id="content">
           <Section>
             <H2 mt={{ lg: 0 }} id={tocItems[0].id}>
               {tocItems[0].title}
@@ -274,9 +265,13 @@ const LearnPage = ({ data }: PageProps<Queries.LearnPageQuery, Context>) => {
             <AdditionalReadingHeader>
               <Translation id="additional-reading-more-on-ethereum-basics" />
             </AdditionalReadingHeader>
+
             <DocsContainer>
               <DocLink to="/guides/">
                 <Translation id="guides-hub" />
+              </DocLink>
+              <DocLink to="/quizzes/">
+                <Translation id="quizzes-title" />
               </DocLink>
               <DocLink to="/smart-contracts/">
                 <Translation id="additional-reading-what-are-smart-contracts" />
@@ -286,6 +281,12 @@ const LearnPage = ({ data }: PageProps<Queries.LearnPageQuery, Context>) => {
               </DocLink>
               <DocLink to="/web3/">
                 <Translation id="additional-reading-what-is-web3" />
+              </DocLink>
+              <DocLink
+                to="https://www.kernel.community/en/learn/module-1/value"
+                isExternal
+              >
+                <Translation id="additional-reading-value" />
               </DocLink>
               <DocLink
                 to="https://www.youtube.com/watch?v=WSN5BaCzsbo"
@@ -529,7 +530,7 @@ const LearnPage = ({ data }: PageProps<Queries.LearnPageQuery, Context>) => {
             </AdditionalReadingHeader>
             <DocsContainer>
               <DocLink
-                to="http://governance40.com/wp-content/uploads/2019/06/Blockchain-in-Developing-Countries.pdf"
+                to="https://web.archive.org/web/20220708092831/http://governance40.com/wp-content/uploads/2019/06/Blockchain-in-Developing-Countries.pdf"
                 isExternal
               >
                 <Translation id="more-on-ethereum-use-cases-link" />
@@ -602,7 +603,7 @@ const LearnPage = ({ data }: PageProps<Queries.LearnPageQuery, Context>) => {
                   <CardImage>
                     <GatsbyImage image={getImage(data.merge)!} alt="" />
                   </CardImage>
-                  <ButtonLink to="/upgrades/">
+                  <ButtonLink to="/roadmap/">
                     <Translation id="ethereum-upgrades-card-button" />
                   </ButtonLink>
                 </>
@@ -646,6 +647,9 @@ const LearnPage = ({ data }: PageProps<Queries.LearnPageQuery, Context>) => {
               </DocLink>
               <DocLink to="https://weekinethereumnews.com/" isExternal>
                 <Translation id="more-on-ethereum-protocol-week-in-ethereum" />
+              </DocLink>
+              <DocLink to="https://kernel.community/en/learn/" isExternal>
+                <Translation id="more-on-ethereum-protocol-kernel" />
               </DocLink>
             </DocsContainer>
           </Section>
@@ -846,7 +850,7 @@ const LearnPage = ({ data }: PageProps<Queries.LearnPageQuery, Context>) => {
           </Section>
 
           <FeedbackCard />
-        </Box>
+        </ContentContainer>
       </Flex>
     </Box>
   )

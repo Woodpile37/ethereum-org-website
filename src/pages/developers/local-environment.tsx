@@ -75,6 +75,15 @@ const ChooseStackPage = ({
       alt: t("page-local-environment-waffle-logo-alt"),
     },
     {
+      id: "kurtosis",
+      url: "https://www.kurtosis.com/",
+      githubUrl: "https://github.com/kurtosis-tech/kurtosis",
+      background: "#000000",
+      name: "Kurtosis",
+      description: t("page-local-environment-kurtosis-desc"),
+      alt: t("page-local-environment-kurtosis-logo-alt"),
+    },
+    {
       id: "hardhat",
       url: "https://hardhat.org/",
       githubUrl: "https://github.com/nomiclabs/hardhat",
@@ -91,15 +100,6 @@ const ChooseStackPage = ({
       name: "Truffle",
       description: t("page-local-environment-truffle-desc"),
       alt: t("page-local-environment-truffle-logo-alt"),
-    },
-    {
-      id: "embark",
-      url: "https://framework.embarklabs.io/",
-      githubUrl: "https://github.com/embarklabs/embark",
-      background: "#1b3e5f",
-      name: "Embark",
-      description: t("page-local-environment-embark-desc"),
-      alt: t("page-local-environment-embark-logo-alt"),
     },
     {
       id: "brownie",
@@ -318,7 +318,7 @@ export const query = graphql`
     hero: file(relativePath: { eq: "developers-eth-blocks.png" }) {
       childImageSharp {
         gatsbyImageData(
-          width: 800
+          width: 700
           layout: CONSTRAINED
           placeholder: BLURRED
           quality: 100
@@ -343,9 +343,6 @@ export const query = graphql`
     }
 
     truffle: file(relativePath: { eq: "dev-tools/truffle.png" }) {
-      ...devtoolImage
-    }
-    embark: file(relativePath: { eq: "dev-tools/embark.png" }) {
       ...devtoolImage
     }
     brownie: file(relativePath: { eq: "assets/eth-diamond-black.png" }) {
@@ -393,6 +390,9 @@ export const query = graphql`
       ...devtoolImage
     }
     foundry: file(relativePath: { eq: "dev-tools/foundry.png" }) {
+      ...devtoolImage
+    }
+    kurtosis: file(relativePath: { eq: "dev-tools/kurtosis.png" }) {
       ...devtoolImage
     }
   }
